@@ -1,4 +1,6 @@
-﻿namespace Campeonato
+﻿using System;
+
+namespace Campeonato
 {
     partial class Form1
     {
@@ -53,6 +55,8 @@
             this.mtxtDni = new System.Windows.Forms.MaskedTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.prgbQuality = new System.Windows.Forms.ProgressBar();
+            this.radioButtonModificar = new System.Windows.Forms.RadioButton();
+            this.radioButtonEliminar = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -270,11 +274,36 @@
             this.prgbQuality.TabIndex = 16;
             this.prgbQuality.Click += new System.EventHandler(this.prgbQuality_Click);
             // 
+            // radioButtonModificar
+            // 
+            this.radioButtonModificar.AutoSize = true;
+            this.radioButtonModificar.Location = new System.Drawing.Point(374, 233);
+            this.radioButtonModificar.Name = "radioButtonModificar";
+            this.radioButtonModificar.Size = new System.Drawing.Size(68, 17);
+            this.radioButtonModificar.TabIndex = 17;
+            this.radioButtonModificar.TabStop = true;
+            this.radioButtonModificar.Text = "Modificar";
+            this.radioButtonModificar.UseVisualStyleBackColor = true;
+            this.radioButtonModificar.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
+            // radioButtonEliminar
+            // 
+            this.radioButtonEliminar.AutoSize = true;
+            this.radioButtonEliminar.Location = new System.Drawing.Point(456, 233);
+            this.radioButtonEliminar.Name = "radioButtonEliminar";
+            this.radioButtonEliminar.Size = new System.Drawing.Size(61, 17);
+            this.radioButtonEliminar.TabIndex = 18;
+            this.radioButtonEliminar.TabStop = true;
+            this.radioButtonEliminar.Text = "Eliminar";
+            this.radioButtonEliminar.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(564, 303);
+            this.Controls.Add(this.radioButtonEliminar);
+            this.Controls.Add(this.radioButtonModificar);
             this.Controls.Add(this.prgbQuality);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.mtxtDni);
@@ -305,6 +334,11 @@
 
         }
 
+        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         private System.Windows.Forms.TextBox txtFirstName;
@@ -331,6 +365,8 @@
         private System.Windows.Forms.MaskedTextBox mtxtAge;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ProgressBar prgbQuality;
+        private System.Windows.Forms.RadioButton radioButtonEliminar;
+        private System.Windows.Forms.RadioButton radioButtonModificar;
     }
 }
 
