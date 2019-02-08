@@ -44,9 +44,9 @@ namespace Campeonato
             SetImage(ie.RawImage.Image);
 
             ExtractTemplate();
-            
+
             //rawImage = ie.RawImage;
-            
+
             //fingerPrint.Extract(rawImage, ref _template);
         }
 
@@ -163,6 +163,90 @@ namespace Campeonato
             }
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (Template_Null(_template) == false)
+            {
+                using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
+                {
+
+                    var query = @"INSERT INTO persona (First_Name, Last_Name, Birth_Date, Age, Dni, Id_Team, Template, Model_Quality) VALUES (@First_Name, @Last_Name, @Birth_Date, @Age, @Dni, @Id_Team, @Template, @Model_Quality)";
+                    SqlCommand command = new SqlCommand(query, conn);
+                    command.Parameters.Add(new SqlParameter("@First_Name", txtFirstName.Text));
+                    command.Parameters.Add(new SqlParameter("@Last_Name", txtLastName.Text));
+                    command.Parameters.Add(new SqlParameter("@Birth_Date", dateTimePicker1.Value.ToString("yyyy/MM/dd")));
+                    command.Parameters.Add(new SqlParameter("@Age", mtxtAge.Text));
+                    command.Parameters.Add(new SqlParameter("@Dni", mtxtDni.Text));
+                    command.Parameters.Add(new SqlParameter("@Id_Team", lblTeamList.Text));
+                    command.Parameters.Add(new SqlParameter("@Template", (Object)_template.Buffer));
+                    command.Parameters.Add(new SqlParameter("@Model_Quality", _template.Quality.ToString()));
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                    conn.Close();
+                }
+                MessageBox.Show("Se registró con éxito!!", "Programa con Joako", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+        }
+
+        private void btnConsult_Click(object sender, EventArgs e)
+        {
+            if (Template_Null(_template) == false)
+            {
+                using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
+                {
+                    var query = "select First_Name, Template, Model_Quality from persona";
+                    byte[] dataTemplate; //nos permitirá almacenar temporalmente el template de la B.D.
+                    FingerprintTemplate templateTemp;
+                    int precision, calidad;
+                    SqlCommand command = new SqlCommand(query, conn);
+                    conn.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+
+                    //debemos preparar la libreria para la identificacion de huellas
+
+                    fingerPrint.IdentifyPrepare(_template);
+
+                    while (reader.Read())
+                    {
+                        dataTemplate = (byte[])reader["template"];// Extraemos el template desde la B.D.
+                        calidad = (int)reader["Model_Quality"]; //extraemos la calidad de ese template
+
+                        /* Creamos un nuevo objeto del tipo temporal "FingerprintTemplate" y asignamos las propiedades del template que acabamos de extraer de la B.D.*/
+                        templateTemp = new GriauleFingerprintLibrary.DataTypes.FingerprintTemplate();
+                        templateTemp.Buffer = dataTemplate;
+                        templateTemp.Size = dataTemplate.Length;
+                        templateTemp.Quality = calidad;
+                        if ((fingerPrint.Identify(templateTemp, out precision)) == 1) //si el template cumple con los requisitos de presición
+                        {
+                            MessageBox.Show(reader["First_Name"].ToString());
+                            break;
+                        }
+                        else
+                        {
+                            MessageBox.Show("no encontrado");
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool Template_Null(FingerprintTemplate _template)
+        {
+            if (_template == null)
+            {
+                MessageBox.Show("Ingrese huella");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+
         private void txtFirstName_TextChanged(object sender, EventArgs e)
         {
 
@@ -227,28 +311,6 @@ namespace Campeonato
 
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
-            {
-
-                var query = @"INSERT INTO persona (First_Name, Last_Name, Birth_Date, Age, Dni, Id_Team, Template, Model_Quality) VALUES (@First_Name, @Last_Name, @Birth_Date, @Age, @Dni, @Id_Team, @Template, @Model_Quality)";
-                SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.Add(new SqlParameter("@First_Name", txtFirstName.Text));
-                command.Parameters.Add(new SqlParameter("@Last_Name", txtLastName.Text));
-                command.Parameters.Add(new SqlParameter("@Birth_Date", dateTimePicker1.Value.ToString("yyyy/MM/dd")));
-                command.Parameters.Add(new SqlParameter("@Age", mtxtAge.Text));
-                command.Parameters.Add(new SqlParameter("@Dni", mtxtDni.Text));
-                command.Parameters.Add(new SqlParameter("@Id_Team", lblTeamList.Text));
-                command.Parameters.Add(new SqlParameter("@Template", (Object)_template.Buffer));
-                command.Parameters.Add(new SqlParameter("@Model_Quality", _template.Quality.ToString()));
-                conn.Open();
-                command.ExecuteNonQuery();
-                conn.Close();
-            }
-            MessageBox.Show("Se registró con éxito!!", "Programa con Joako", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void acercaDeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("App Campeonato v1.0", "Programa Joako", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -298,6 +360,8 @@ namespace Campeonato
         {
 
         }
+
+
     }
 }
 

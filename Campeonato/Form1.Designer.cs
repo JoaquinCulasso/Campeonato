@@ -57,6 +57,7 @@ namespace Campeonato
             this.prgbQuality = new System.Windows.Forms.ProgressBar();
             this.radioButtonModificar = new System.Windows.Forms.RadioButton();
             this.radioButtonEliminar = new System.Windows.Forms.RadioButton();
+            this.btnConsult = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -297,11 +298,22 @@ namespace Campeonato
             this.radioButtonEliminar.Text = "Eliminar";
             this.radioButtonEliminar.UseVisualStyleBackColor = true;
             // 
+            // btnConsult
+            // 
+            this.btnConsult.Location = new System.Drawing.Point(12, 268);
+            this.btnConsult.Name = "btnConsult";
+            this.btnConsult.Size = new System.Drawing.Size(75, 23);
+            this.btnConsult.TabIndex = 19;
+            this.btnConsult.Text = "Consultar";
+            this.btnConsult.UseVisualStyleBackColor = true;
+            this.btnConsult.Click += new System.EventHandler(this.btnConsult_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(564, 303);
+            this.Controls.Add(this.btnConsult);
             this.Controls.Add(this.radioButtonEliminar);
             this.Controls.Add(this.radioButtonModificar);
             this.Controls.Add(this.prgbQuality);
@@ -367,6 +379,7 @@ namespace Campeonato
         private System.Windows.Forms.ProgressBar prgbQuality;
         private System.Windows.Forms.RadioButton radioButtonEliminar;
         private System.Windows.Forms.RadioButton radioButtonModificar;
+        private System.Windows.Forms.Button btnConsult;
     }
 }
 
