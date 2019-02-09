@@ -165,7 +165,7 @@ namespace Campeonato
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (Template_Null(_template) == false)
+            if (Empty_Field(txtFirstName.Text, txtLastName.Text, _template, mtxtAge.Text, mtxtDni.Text, lblTeamList.Text) == false)
             {
                 using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
                 {
@@ -191,17 +191,18 @@ namespace Campeonato
 
         private void btnConsult_Click(object sender, EventArgs e)
         {
-            if (Template_Null(_template) == false)
+            if (Empty_Field(txtFirstName.Text, txtLastName.Text, _template, mtxtAge.Text, mtxtDni.Text, lblTeamList.Text) == false)
             {
                 using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
                 {
-                    var query = "select First_Name, Template, Model_Quality from persona";
+                    var query = "select First_Name, Last_Name, Birth_Date, Age, Dni, Id_Team, Template, Model_Quality from persona";
                     byte[] dataTemplate; //nos permitirá almacenar temporalmente el template de la B.D.
                     FingerprintTemplate templateTemp;
                     int precision, calidad;
                     SqlCommand command = new SqlCommand(query, conn);
                     conn.Open();
                     SqlDataReader reader = command.ExecuteReader();
+                    int flag = 0;
 
 
                     //debemos preparar la libreria para la identificacion de huellas
@@ -210,6 +211,7 @@ namespace Campeonato
 
                     while (reader.Read())
                     {
+
                         dataTemplate = (byte[])reader["template"];// Extraemos el template desde la B.D.
                         calidad = (int)reader["Model_Quality"]; //extraemos la calidad de ese template
 
@@ -220,20 +222,83 @@ namespace Campeonato
                         templateTemp.Quality = calidad;
                         if ((fingerPrint.Identify(templateTemp, out precision)) == 1) //si el template cumple con los requisitos de presición
                         {
-                            MessageBox.Show(reader["First_Name"].ToString());
+                            //MessageBox.Show(reader["First_Name"].ToString());
+                            MessageBox.Show("jugador encontrado");
+                            txtFirstName.ResetText();
+                            txtFirstName.AppendText(reader["First_Name"].ToString());
+                            txtLastName.ResetText();
+                            txtLastName.AppendText(reader["Last_Name"].ToString());
+                            dateTimePicker1.ResetText();
+                            dateTimePicker1.Value = Convert.ToDateTime((reader["Birth_Date"].ToString()));
+                            mtxtAge.ResetText();
+                            mtxtAge.AppendText(reader["Age"].ToString());
+                            mtxtDni.ResetText();
+                            mtxtDni.AppendText(reader["Dni"].ToString());
+                            lblTeamList.ResetText();
+                            lblTeamList.SelectedText = reader["Id_Team"].ToString();
+                            flag = 1;
                             break;
                         }
-                        else
-                        {
-                            MessageBox.Show("no encontrado");
-                        }
                     }
+                    if (flag < 1)
+                    {
+                        MessageBox.Show("no encontrado");
+                    }
+
                 }
             }
         }
 
-        private bool Template_Null(FingerprintTemplate _template)
+        private bool Empty_Field(String First_Name, String Last_Name, FingerprintTemplate _template, String Age, String Dni, String Team_List)
         {
+            ////Campo nombre
+            ////recorremos el campo y verificamos que los caracteres escritos sean correctos
+            //bool error = false;
+
+            //foreach (char caracter in txtFirstName.Text)
+            //{
+            //    if (!char.IsLetter(caracter))
+            //    {
+            //        error = true;
+            //        break;
+
+            //    }
+            //}
+
+            ////Verificamos por la condicion de error
+            //if (error)
+            //{
+            //    errorProvider1.SetError(txtFirstName, "Solamente letras en el nombre");
+            //}
+            //else
+            //{
+            //    errorProvider1.Clear();
+            //}
+
+            //if (txtFirstName.Text == null) {
+
+            //}
+            ////recorremos el campo y verificamos que los caracteres escritos sean correctos
+
+            //foreach (char caracter in txtLastName.Text)
+            //{
+            //    if (!char.IsLetter(caracter))
+            //    {
+            //        error = true;
+            //        break;
+            //    }
+            //}
+
+
+            ////Verificamos por la condicion de error
+            //if (error)
+            //{
+            //    errorProvider1.SetError(txtLastName, "Solamente letras en el apellido");
+            //}
+            //else
+            //{
+            //    errorProvider1.Clear();
+            //}
             if (_template == null)
             {
                 MessageBox.Show("Ingrese huella");
@@ -250,55 +315,12 @@ namespace Campeonato
         private void txtFirstName_TextChanged(object sender, EventArgs e)
         {
 
-            //recorremos el campo y verificamos quelos caracteres escritos sean correctos
-            bool error = false;
-
-            foreach (char caracter in txtFirstName.Text)
-            {
-                if (!char.IsLetter(caracter))
-                {
-                    error = true;
-                    break;
-
-                }
-            }
-
-            //Verificamos por la condicion de error
-            if (error)
-            {
-                errorProvider1.SetError(txtFirstName, "Solamente letras en el nombre");
-            }
-            else
-            {
-                errorProvider1.Clear();
-            }
         }
 
         private void txtLastName_TextChanged(object sender, EventArgs e)
         {
 
-            //recorremos el campo y verificamos quelos caracteres escritos sean correctos
-            bool error = false;
 
-            foreach (char caracter in txtLastName.Text)
-            {
-                if (!char.IsLetter(caracter))
-                {
-                    error = true;
-                    break;
-                }
-            }
-
-
-            //Verificamos por la condicion de error
-            if (error)
-            {
-                errorProvider1.SetError(txtLastName, "Solamente letras en el apellido");
-            }
-            else
-            {
-                errorProvider1.Clear();
-            }
         }
 
         private void fontDialog1_Apply(object sender, EventArgs e)
