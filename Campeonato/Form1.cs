@@ -7,7 +7,6 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GriauleFingerprintLibrary;
 using GriauleFingerprintLibrary.DataTypes;
@@ -22,6 +21,7 @@ namespace Campeonato
         private FingerprintRawImage rawImage; //img original
         private FingerprintTemplate _template; //template donde se guarda la img
 
+
         public Form1()
         {
             InitializeComponent();
@@ -35,6 +35,7 @@ namespace Campeonato
         {
             fingerPrint.Initialize();
             fingerPrint.CaptureInitialize();
+            LlenarCombo("SELECT Id_Team, Team_Name FROM team", "Team_Name", "Id_Team", lblTeamList, ConfigurationManager.ConnectionStrings["conexion"].ToString());
         }
 
         //muestra la imagen --> template (ver ExtractTemplate)
@@ -177,12 +178,11 @@ namespace Campeonato
                     command.Parameters.Add(new SqlParameter("@Birth_Date", dateTimePicker1.Value.ToString("yyyy/MM/dd")));
                     command.Parameters.Add(new SqlParameter("@Age", mtxtAge.Text));
                     command.Parameters.Add(new SqlParameter("@Dni", mtxtDni.Text));
-                    command.Parameters.Add(new SqlParameter("@Id_Team", lblTeamList.Text));
+                    command.Parameters.Add(new SqlParameter("@Id_Team", lblTeamList.SelectedValue));
                     command.Parameters.Add(new SqlParameter("@Template", (Object)_template.Buffer));
                     command.Parameters.Add(new SqlParameter("@Model_Quality", _template.Quality.ToString()));
                     conn.Open();
                     command.ExecuteNonQuery();
-                    conn.Close();
                 }
                 MessageBox.Show("Se registró con éxito!!", "Programa con Joako", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -191,11 +191,11 @@ namespace Campeonato
 
         private void btnConsult_Click(object sender, EventArgs e)
         {
-            if (Empty_Field(txtFirstName.Text, txtLastName.Text, _template, mtxtAge.Text, mtxtDni.Text, lblTeamList.Text) == false)
+            if (Empty_Field(_template) == false)
             {
                 using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
                 {
-                    var query = "select First_Name, Last_Name, Birth_Date, Age, Dni, Id_Team, Template, Model_Quality from persona";
+                    var query = "select First_Name, Last_Name, Birth_Date, Age, Dni, Team_Name, Template, Model_Quality from persona p, team t where p.Id_Team = t.Id_Team";
                     byte[] dataTemplate; //nos permitirá almacenar temporalmente el template de la B.D.
                     FingerprintTemplate templateTemp;
                     int precision, calidad;
@@ -235,7 +235,7 @@ namespace Campeonato
                             mtxtDni.ResetText();
                             mtxtDni.AppendText(reader["Dni"].ToString());
                             lblTeamList.ResetText();
-                            lblTeamList.SelectedText = reader["Id_Team"].ToString();
+                            lblTeamList.SelectedText = reader["Team_Name"].ToString();
                             flag = 1;
                             break;
                         }
@@ -249,66 +249,56 @@ namespace Campeonato
             }
         }
 
-        private bool Empty_Field(String First_Name, String Last_Name, FingerprintTemplate _template, String Age, String Dni, String Team_List)
+        private bool Empty_Field(FingerprintTemplate template)
         {
-            ////Campo nombre
-            ////recorremos el campo y verificamos que los caracteres escritos sean correctos
-            //bool error = false;
+            bool error = false;
 
-            //foreach (char caracter in txtFirstName.Text)
-            //{
-            //    if (!char.IsLetter(caracter))
-            //    {
-            //        error = true;
-            //        break;
-
-            //    }
-            //}
-
-            ////Verificamos por la condicion de error
-            //if (error)
-            //{
-            //    errorProvider1.SetError(txtFirstName, "Solamente letras en el nombre");
-            //}
-            //else
-            //{
-            //    errorProvider1.Clear();
-            //}
-
-            //if (txtFirstName.Text == null) {
-
-            //}
-            ////recorremos el campo y verificamos que los caracteres escritos sean correctos
-
-            //foreach (char caracter in txtLastName.Text)
-            //{
-            //    if (!char.IsLetter(caracter))
-            //    {
-            //        error = true;
-            //        break;
-            //    }
-            //}
-
-
-            ////Verificamos por la condicion de error
-            //if (error)
-            //{
-            //    errorProvider1.SetError(txtLastName, "Solamente letras en el apellido");
-            //}
-            //else
-            //{
-            //    errorProvider1.Clear();
-            //}
             if (_template == null)
             {
                 MessageBox.Show("Ingrese huella");
-                return true;
+                return error = true;
             }
-            else
+            return error;
+        }
+
+        private bool Empty_Field(String First_Name, String Last_Name, FingerprintTemplate _template, String Age, String Dni, String Team_List)
+        {
+            bool error = false;
+
+            if (_template == null)
             {
-                return false;
+                MessageBox.Show("Ingrese huella");
+                return error = true;
             }
 
+            if (String.IsNullOrWhiteSpace(First_Name))
+            {
+                MessageBox.Show("Ingrese Nombre");
+                return error = true;
+            }
+            if (String.IsNullOrWhiteSpace(Last_Name))
+            {
+                MessageBox.Show("Ingrese Apellido");
+                return error = true;
+            }
+            
+            if (String.IsNullOrWhiteSpace(Age))
+            {
+                MessageBox.Show("Ingrese Edad");
+                return error = true;
+            }
+            if (String.IsNullOrWhiteSpace(Dni))
+            {
+                MessageBox.Show("Ingrese DNI");
+                return error = true;
+            }
+            if (Team_List.Equals("Seleccione equipo") || String.IsNullOrWhiteSpace(Team_List))
+            {
+                MessageBox.Show("Seleccione equipo");
+                return error = true;
+            }
+
+            return error;
         }
 
 
@@ -365,7 +355,7 @@ namespace Campeonato
 
         private void lblTeamList_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+        
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -378,12 +368,94 @@ namespace Campeonato
 
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void radioButtonEliminar_CheckedChanged(object sender, EventArgs e)
         {
 
         }
 
+        private void radioButtonModificar_CheckedChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void Empty_Field_Form(object sender, EventArgs e)
+        {
+            //Campo nombre
+            //recorremos el campo y verificamos que los caracteres escritos sean correctos
+            bool error = false;
+            bool error1 = false;
+
+            foreach (char caracter in txtFirstName.Text)
+            {
+                if (!char.IsLetter(caracter))
+                {
+                    error = true;
+                    break;
+                }
+            }
+
+            //Verificamos por la condicion de error
+            if (error)
+            {
+                errorProvider1.SetError(txtFirstName, "Solamente letras en el nombre");
+            }
+            else
+            {
+                errorProvider1.Clear();
+            }
+
+            //recorremos el campo y verificamos que los caracteres escritos sean correctos
+
+            foreach (char caracter in txtLastName.Text)
+            {
+                if (!char.IsLetter(caracter))
+                {
+                    error1 = true;
+                    break;
+                }
+            }
+
+
+
+            //Verificamos por la condicion de error
+            if (error1)
+            {
+                errorProvider1.SetError(txtLastName, "Solamente letras en el apellido");
+            }
+            else
+            {
+                errorProvider1.Clear();
+            }
+        }
+
+        public static void LlenarCombo(string query, string displayMember, string valueMember, ComboBox comboBoxTeam, string connectionString)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                DataTable dataTable = new DataTable();
+                using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection))
+                {
+                    sqlDataAdapter.Fill(dataTable);
+                    comboBoxTeam.DataSource = dataTable;
+                    comboBoxTeam.DisplayMember = displayMember;
+                    comboBoxTeam.ValueMember = valueMember; //identificador
+                    comboBoxTeam.SelectedIndex = -1;//opcional
+                }
+            }
+        }
+
+        private void radioButtonModificar_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void agregarEquipoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 frm2 = new Form2();
+            frm2.Show();
+        }
     }
 }
+
 

@@ -20,3 +20,4 @@ C:\Users\JOAQU\source\Campeonato\Campeonato\bin\Debug\Campeonato.exe.config
 C:\Users\JOAQU\source\Campeonato\Campeonato\bin\Debug\Campeonato.exe
 C:\Users\JOAQU\source\Campeonato\Campeonato\bin\Debug\Campeonato.pdb
 C:\Users\JOAQU\source\Campeonato\Campeonato\obj\Debug\Campeonato.csproj.CopyComplete
+C:\Users\JOAQU\source\Campeonato\Campeonato\obj\Debug\Campeonato.Form2.resources

@@ -41,6 +41,7 @@ namespace Campeonato
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.operacionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.agregarEquipoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reporteEquipoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,9 +56,9 @@ namespace Campeonato
             this.mtxtDni = new System.Windows.Forms.MaskedTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.prgbQuality = new System.Windows.Forms.ProgressBar();
-            this.radioButtonModificar = new System.Windows.Forms.RadioButton();
             this.radioButtonEliminar = new System.Windows.Forms.RadioButton();
             this.btnConsult = new System.Windows.Forms.Button();
+            this.radioButtonModificar = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -69,7 +70,7 @@ namespace Campeonato
             this.txtFirstName.Name = "txtFirstName";
             this.txtFirstName.Size = new System.Drawing.Size(200, 20);
             this.txtFirstName.TabIndex = 0;
-            this.txtFirstName.TextChanged += new System.EventHandler(this.txtFirstName_TextChanged);
+            this.txtFirstName.TextChanged += new System.EventHandler(this.Empty_Field_Form);
             // 
             // lblFirstName
             // 
@@ -87,7 +88,6 @@ namespace Campeonato
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(200, 20);
             this.txtLastName.TabIndex = 1;
-            this.txtLastName.TextChanged += new System.EventHandler(this.txtLastName_TextChanged);
             // 
             // lblLastName
             // 
@@ -148,16 +148,25 @@ namespace Campeonato
             // operacionesToolStripMenuItem
             // 
             this.operacionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.agregarEquipoToolStripMenuItem,
             this.reporteEquipoToolStripMenuItem});
             this.operacionesToolStripMenuItem.Name = "operacionesToolStripMenuItem";
             this.operacionesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
             this.operacionesToolStripMenuItem.Text = "Operaciones";
             // 
+            // agregarEquipoToolStripMenuItem
+            // 
+            this.agregarEquipoToolStripMenuItem.Name = "agregarEquipoToolStripMenuItem";
+            this.agregarEquipoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
+            this.agregarEquipoToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.agregarEquipoToolStripMenuItem.Text = "Agregar Equipo";
+            this.agregarEquipoToolStripMenuItem.Click += new System.EventHandler(this.agregarEquipoToolStripMenuItem_Click);
+            // 
             // reporteEquipoToolStripMenuItem
             // 
             this.reporteEquipoToolStripMenuItem.Name = "reporteEquipoToolStripMenuItem";
             this.reporteEquipoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
-            this.reporteEquipoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.reporteEquipoToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.reporteEquipoToolStripMenuItem.Text = "Reporte Equipo";
             // 
             // ayudaToolStripMenuItem
@@ -215,10 +224,6 @@ namespace Campeonato
             // lblTeamList
             // 
             this.lblTeamList.FormattingEnabled = true;
-            this.lblTeamList.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3"});
             this.lblTeamList.Location = new System.Drawing.Point(111, 217);
             this.lblTeamList.Name = "lblTeamList";
             this.lblTeamList.Size = new System.Drawing.Size(121, 21);
@@ -275,18 +280,6 @@ namespace Campeonato
             this.prgbQuality.TabIndex = 16;
             this.prgbQuality.Click += new System.EventHandler(this.prgbQuality_Click);
             // 
-            // radioButtonModificar
-            // 
-            this.radioButtonModificar.AutoSize = true;
-            this.radioButtonModificar.Location = new System.Drawing.Point(374, 233);
-            this.radioButtonModificar.Name = "radioButtonModificar";
-            this.radioButtonModificar.Size = new System.Drawing.Size(68, 17);
-            this.radioButtonModificar.TabIndex = 17;
-            this.radioButtonModificar.TabStop = true;
-            this.radioButtonModificar.Text = "Modificar";
-            this.radioButtonModificar.UseVisualStyleBackColor = true;
-            this.radioButtonModificar.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-            // 
             // radioButtonEliminar
             // 
             this.radioButtonEliminar.AutoSize = true;
@@ -297,6 +290,7 @@ namespace Campeonato
             this.radioButtonEliminar.TabStop = true;
             this.radioButtonEliminar.Text = "Eliminar";
             this.radioButtonEliminar.UseVisualStyleBackColor = true;
+            this.radioButtonEliminar.CheckedChanged += new System.EventHandler(this.radioButtonEliminar_CheckedChanged);
             // 
             // btnConsult
             // 
@@ -308,14 +302,26 @@ namespace Campeonato
             this.btnConsult.UseVisualStyleBackColor = true;
             this.btnConsult.Click += new System.EventHandler(this.btnConsult_Click);
             // 
+            // radioButtonModificar
+            // 
+            this.radioButtonModificar.AutoSize = true;
+            this.radioButtonModificar.Location = new System.Drawing.Point(374, 234);
+            this.radioButtonModificar.Name = "radioButtonModificar";
+            this.radioButtonModificar.Size = new System.Drawing.Size(68, 17);
+            this.radioButtonModificar.TabIndex = 20;
+            this.radioButtonModificar.TabStop = true;
+            this.radioButtonModificar.Text = "Modificar";
+            this.radioButtonModificar.UseVisualStyleBackColor = true;
+            this.radioButtonModificar.CheckedChanged += new System.EventHandler(this.radioButtonModificar_CheckedChanged_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(564, 303);
+            this.Controls.Add(this.radioButtonModificar);
             this.Controls.Add(this.btnConsult);
             this.Controls.Add(this.radioButtonEliminar);
-            this.Controls.Add(this.radioButtonModificar);
             this.Controls.Add(this.prgbQuality);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.mtxtDni);
@@ -378,8 +384,9 @@ namespace Campeonato
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ProgressBar prgbQuality;
         private System.Windows.Forms.RadioButton radioButtonEliminar;
-        private System.Windows.Forms.RadioButton radioButtonModificar;
         private System.Windows.Forms.Button btnConsult;
+        private System.Windows.Forms.RadioButton radioButtonModificar;
+        private System.Windows.Forms.ToolStripMenuItem agregarEquipoToolStripMenuItem;
     }
 }
 
