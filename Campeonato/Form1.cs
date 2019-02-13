@@ -30,7 +30,7 @@ namespace Campeonato
         {
             fingerPrint.Initialize();
             fingerPrint.CaptureInitialize();
-            LlenarCombo("SELECT Id_Team, Team_Name FROM team", "Team_Name", "Id_Team", lblTeamList, ConfigurationManager.ConnectionStrings["conexion"].ToString());
+            fillCombo("SELECT Id_Team, Team_Name FROM team", "Team_Name", "Id_Team", lblTeamList, ConfigurationManager.ConnectionStrings["conexion"].ToString());
         }
 
         //muestra la imagen --> template (ver ExtractTemplate)
@@ -179,7 +179,7 @@ namespace Campeonato
                     conn.Open();
                     command.ExecuteNonQuery();
                 }
-                MessageBox.Show("Se registró con éxito!!", "Programa con Joako", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Se registró con éxito!!", "Zona Argentino", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
         }
@@ -193,7 +193,7 @@ namespace Campeonato
                     var query = "select First_Name, Last_Name, Birth_Date, Age, Dni, Team_Name, Template, Model_Quality from persona p, team t where p.Id_Team = t.Id_Team";
                     byte[] dataTemplate; //nos permitirá almacenar temporalmente el template de la B.D.
                     FingerprintTemplate templateTemp;
-                    int precision, calidad;
+                    int precision, quality;
                     SqlCommand command = new SqlCommand(query, conn);
                     conn.Open();
                     SqlDataReader reader = command.ExecuteReader();
@@ -208,13 +208,13 @@ namespace Campeonato
                     {
 
                         dataTemplate = (byte[])reader["template"];// Extraemos el template desde la B.D.
-                        calidad = (int)reader["Model_Quality"]; //extraemos la calidad de ese template
+                        quality = (int)reader["Model_Quality"]; //extraemos la calidad de ese template
 
                         /* Creamos un nuevo objeto del tipo temporal "FingerprintTemplate" y asignamos las propiedades del template que acabamos de extraer de la B.D.*/
                         templateTemp = new GriauleFingerprintLibrary.DataTypes.FingerprintTemplate();
                         templateTemp.Buffer = dataTemplate;
                         templateTemp.Size = dataTemplate.Length;
-                        templateTemp.Quality = calidad;
+                        templateTemp.Quality = quality;
                         if ((fingerPrint.Identify(templateTemp, out precision)) == 1) //si el template cumple con los requisitos de presición
                         {
                             //MessageBox.Show(reader["First_Name"].ToString());
@@ -326,7 +326,7 @@ namespace Campeonato
         {
             mtxtAge.ResetText();
             SendKeys.Send("{Right}");
-            mtxtAge.AppendText(returnEdad());
+            mtxtAge.AppendText(getPlayerAge());
           
         }
 
@@ -428,10 +428,10 @@ namespace Campeonato
 
         public void RefreshForm1()
         {
-            LlenarCombo("SELECT Id_Team, Team_Name FROM team", "Team_Name", "Id_Team", lblTeamList, ConfigurationManager.ConnectionStrings["conexion"].ToString());
+            fillCombo("SELECT Id_Team, Team_Name FROM team", "Team_Name", "Id_Team", lblTeamList, ConfigurationManager.ConnectionStrings["conexion"].ToString());
 
         }
-        public static void LlenarCombo(string query, string displayMember, string valueMember, ComboBox comboBoxTeam, string connectionString)
+        public static void fillCombo(string query, string displayMember, string valueMember, ComboBox comboBoxTeam, string connectionString)
         {
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
             {
@@ -465,7 +465,7 @@ namespace Campeonato
 
         }
 
-      private String returnEdad()
+      private String getPlayerAge()
 		{			          
 			string datePicked = dateTimePicker1.Value.ToString();
 			string dateNow = DateTime.Now.ToString();
@@ -481,22 +481,22 @@ namespace Campeonato
 			int birthYear = Convert.ToInt32(datePicked.Substring(indexYear, 4));
 			int birthMonth = Convert.ToInt32(datePicked.Substring(indexMonth, 2));
 			int birthDay = Convert.ToInt32(datePicked.Substring(0, 2));	
-			int actualYear = Convert.ToInt32(dateNow.Substring(indexYear, 4));
-			int actualMonth = Convert.ToInt32(dateNow.Substring(indexMonth, 2));
-			int actualDay = Convert.ToInt32(dateNow.Substring(0, 2));
+			int currentYear = Convert.ToInt32(dateNow.Substring(indexYear, 4));
+			int currentMonth = Convert.ToInt32(dateNow.Substring(indexMonth, 2));
+			int currentDay = Convert.ToInt32(dateNow.Substring(0, 2));
 		
 			//Inicio calculo edad
-			yearsOld = actualYear - birthYear;
+			yearsOld = currentYear - birthYear;
 
 			//Si el mes actual es mayor al de nacimiento, directamente queda la edad calculada previamente.
 			//Si el mes actual es menor al de nacimiento, hay que restar 1 a la edad calculada ya que aun no cumplio	
-			if (actualMonth < birthMonth){
+			if (currentMonth < birthMonth){
 				yearsOld--;
 			}
 			//Si el mes coincide, se comparan los dias. Si el dia actual es menor al de cumpleaños, se resta 1 ya que aun no cumplio
-			else if (actualMonth == birthMonth){					
+			else if (currentMonth == birthMonth){					
 			
-					if (actualDay < birthDay)
+					if (currentDay < birthDay)
 					{
 						yearsOld--;
 					}
