@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GriauleFingerprintLibrary;
 using GriauleFingerprintLibrary.DataTypes;
-using GriauleFingerprintLibrary.Exceptions;
 
 namespace Campeonato
 {
@@ -297,7 +292,6 @@ namespace Campeonato
                 MessageBox.Show("Seleccione equipo");
                 return error = true;
             }
-
             return error;
         }
 
@@ -330,7 +324,10 @@ namespace Campeonato
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-
+            mtxtAge.ResetText();
+            SendKeys.Send("{Right}");
+            mtxtAge.AppendText(returnEdad());
+          
         }
 
         private void txtAge_TextChanged(object sender, EventArgs e)
@@ -340,7 +337,8 @@ namespace Campeonato
 
         private void mtxtAge_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
         {
-
+           
+            
         }
 
         private void btnClean_Click(object sender, EventArgs e)
@@ -353,7 +351,7 @@ namespace Campeonato
             lblTeamList.ResetText(); ;
         }
 
-        private void lblTeamList_SelectedIndexChanged(object sender, EventArgs e)
+        public void lblTeamList_SelectedIndexChanged(object sender, EventArgs e)
         {
         
         }
@@ -428,6 +426,11 @@ namespace Campeonato
             }
         }
 
+        public void RefreshForm1()
+        {
+            LlenarCombo("SELECT Id_Team, Team_Name FROM team", "Team_Name", "Id_Team", lblTeamList, ConfigurationManager.ConnectionStrings["conexion"].ToString());
+
+        }
         public static void LlenarCombo(string query, string displayMember, string valueMember, ComboBox comboBoxTeam, string connectionString)
         {
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
@@ -452,8 +455,26 @@ namespace Campeonato
 
         private void agregarEquipoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form2 frm2 = new Form2();
+            Form2 frm2 = new Form2(this);
             frm2.Show();
+            
+        }
+
+        private void mtxtCamiseta_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+
+        }
+
+        private String returnEdad() {
+
+          
+            var fecharegistro = dateTimePicker1.Value;
+            var timeSpan = DateTime.Now - fecharegistro;
+
+            double age2 = (timeSpan.TotalDays/ 365.242199);
+            int age = Convert.ToInt32(age2);
+            String age3 = Convert.ToString(age); 
+            return age3;
         }
     }
 }

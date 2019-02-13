@@ -59,6 +59,8 @@ namespace Campeonato
             this.radioButtonEliminar = new System.Windows.Forms.RadioButton();
             this.btnConsult = new System.Windows.Forms.Button();
             this.radioButtonModificar = new System.Windows.Forms.RadioButton();
+            this.CamisetaNro = new System.Windows.Forms.Label();
+            this.mtxtCamiseta = new System.Windows.Forms.MaskedTextBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -196,7 +198,7 @@ namespace Campeonato
             // lblAge
             // 
             this.lblAge.AutoSize = true;
-            this.lblAge.Location = new System.Drawing.Point(12, 147);
+            this.lblAge.Location = new System.Drawing.Point(249, 112);
             this.lblAge.Name = "lblAge";
             this.lblAge.Size = new System.Drawing.Size(32, 13);
             this.lblAge.TabIndex = 9;
@@ -246,7 +248,8 @@ namespace Campeonato
             // 
             // mtxtAge
             // 
-            this.mtxtAge.Location = new System.Drawing.Point(111, 140);
+            this.mtxtAge.Enabled = false;
+            this.mtxtAge.Location = new System.Drawing.Point(287, 105);
             this.mtxtAge.Mask = "99";
             this.mtxtAge.Name = "mtxtAge";
             this.mtxtAge.Size = new System.Drawing.Size(24, 20);
@@ -314,11 +317,32 @@ namespace Campeonato
             this.radioButtonModificar.UseVisualStyleBackColor = true;
             this.radioButtonModificar.CheckedChanged += new System.EventHandler(this.radioButtonModificar_CheckedChanged_1);
             // 
+            // CamisetaNro
+            // 
+            this.CamisetaNro.AutoSize = true;
+            this.CamisetaNro.Location = new System.Drawing.Point(15, 145);
+            this.CamisetaNro.Name = "CamisetaNro";
+            this.CamisetaNro.Size = new System.Drawing.Size(65, 13);
+            this.CamisetaNro.TabIndex = 21;
+            this.CamisetaNro.Text = "Camiseta N°";
+            // 
+            // mtxtCamiseta
+            // 
+            this.mtxtCamiseta.Location = new System.Drawing.Point(111, 138);
+            this.mtxtCamiseta.Mask = "99";
+            this.mtxtCamiseta.Name = "mtxtCamiseta";
+            this.mtxtCamiseta.Size = new System.Drawing.Size(21, 20);
+            this.mtxtCamiseta.TabIndex = 23;
+            this.mtxtCamiseta.ValidatingType = typeof(int);
+            this.mtxtCamiseta.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.mtxtCamiseta_MaskInputRejected);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(564, 303);
+            this.Controls.Add(this.mtxtCamiseta);
+            this.Controls.Add(this.CamisetaNro);
             this.Controls.Add(this.radioButtonModificar);
             this.Controls.Add(this.btnConsult);
             this.Controls.Add(this.radioButtonEliminar);
@@ -387,6 +411,8 @@ namespace Campeonato
         private System.Windows.Forms.Button btnConsult;
         private System.Windows.Forms.RadioButton radioButtonModificar;
         private System.Windows.Forms.ToolStripMenuItem agregarEquipoToolStripMenuItem;
+        private System.Windows.Forms.Label CamisetaNro;
+        private System.Windows.Forms.MaskedTextBox mtxtCamiseta;
     }
 }
 

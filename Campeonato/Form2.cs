@@ -7,16 +7,25 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Campeonato
 {
     public partial class Form2 : Form
     {
-        public Form2()
+      
+        Form1 _form1;
+        public Form2(Form1 interfazPrincipal)
         {
             InitializeComponent();
+            _form1 = interfazPrincipal;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
+            //ejecuta el metodo de refresco al cerrar el form2
+        }
+
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _form1.RefreshForm1();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -44,6 +53,8 @@ namespace Campeonato
                 }
                 MessageBox.Show("Se registró equipo con éxito!!", "Programa con Joako", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtTeamName.Clear();
+                
+                
             }
         }
 
@@ -55,8 +66,12 @@ namespace Campeonato
                 MessageBox.Show("Ingrese Nombre");
                 return error = true;
             }
-
             return error;
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+           
         }
     }
 }
