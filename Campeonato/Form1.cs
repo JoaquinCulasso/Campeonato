@@ -465,18 +465,55 @@ namespace Campeonato
 
         }
 
-        private String returnEdad() {
+      private String returnEdad()
+		{			          
+			string datePicked = dateTimePicker1.Value.ToString();
+			string dateNow = DateTime.Now.ToString();
+			int yearsOld, indexYear, indexMonth;
+			
+			indexYear = datePicked.LastIndexOf("/");
+			indexMonth = dateNow.IndexOf("/");
+			//Incremento para no tomar la barra como caracter inicial en substring
+			indexYear++;
+			indexMonth++;
 
-          
-            var fecharegistro = dateTimePicker1.Value;
-            var timeSpan = DateTime.Now - fecharegistro;
+			//Tomo el año, mes y dia del Picker y los de fecha actual. Los transformo a int para poder calcular
+			int birthYear = Convert.ToInt32(datePicked.Substring(indexYear, 4));
+			int birthMonth = Convert.ToInt32(datePicked.Substring(indexMonth, 2));
+			int birthDay = Convert.ToInt32(datePicked.Substring(0, 2));	
+			int actualYear = Convert.ToInt32(dateNow.Substring(indexYear, 4));
+			int actualMonth = Convert.ToInt32(dateNow.Substring(indexMonth, 2));
+			int actualDay = Convert.ToInt32(dateNow.Substring(0, 2));
+		
+			//Inicio calculo edad
+			yearsOld = actualYear - birthYear;
 
-            double age2 = (timeSpan.TotalDays/ 365.242199);
-            int age = Convert.ToInt32(age2);
-            String age3 = Convert.ToString(age); 
-            return age3;
-        }
-    }
+			//Si el mes actual es mayor al de nacimiento, directamente queda la edad calculada previamente.
+			//Si el mes actual es menor al de nacimiento, hay que restar 1 a la edad calculada ya que aun no cumplio	
+			if (actualMonth < birthMonth){
+				yearsOld--;
+			}
+			//Si el mes coincide, se comparan los dias. Si el dia actual es menor al de cumpleaños, se resta 1 ya que aun no cumplio
+			else if (actualMonth == birthMonth){					
+			
+					if (actualDay < birthDay)
+					{
+						yearsOld--;
+					}
+				}			
+
+			//Control en caso de que quede numero negativo o edad mayor a 100
+			if(yearsOld < 0){
+				yearsOld = 0;
+			} else if (yearsOld > 99){
+				yearsOld = 99;				
+			}
+
+			string yearsOldCalculated = yearsOld.ToString();
+
+			return yearsOldCalculated;
+		}
+	}
 }
 
 
