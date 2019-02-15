@@ -161,18 +161,19 @@ namespace Campeonato
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (Empty_Field(txtFirstName.Text, txtLastName.Text, _template, mtxtAge.Text, mtxtDni.Text, lblTeamList.Text) == false)
+            if (Empty_Field(txtFirstName.Text, txtLastName.Text, _template, mtxtCamiseta.Text, mtxtDni.Text, lblTeamList.Text) == false)
             {
                 using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
                 {
 
-                    var query = @"INSERT INTO persona (First_Name, Last_Name, Birth_Date, Age, Dni, Id_Team, Template, Model_Quality) VALUES (@First_Name, @Last_Name, @Birth_Date, @Age, @Dni, @Id_Team, @Template, @Model_Quality)";
+                    var query = @"INSERT INTO persona (First_Name, Last_Name, Birth_Date, Age, Dni, Camiseta, Id_Team, Template, Model_Quality) VALUES (@First_Name, @Last_Name, @Birth_Date, @Age, @Dni, @Camiseta, @Id_Team, @Template, @Model_Quality)";
                     SqlCommand command = new SqlCommand(query, conn);
                     command.Parameters.Add(new SqlParameter("@First_Name", txtFirstName.Text));
                     command.Parameters.Add(new SqlParameter("@Last_Name", txtLastName.Text));
                     command.Parameters.Add(new SqlParameter("@Birth_Date", dateTimePicker1.Value.ToString("yyyy/MM/dd")));
                     command.Parameters.Add(new SqlParameter("@Age", mtxtAge.Text));
                     command.Parameters.Add(new SqlParameter("@Dni", mtxtDni.Text));
+                    command.Parameters.Add(new SqlParameter("@Camiseta", mtxtCamiseta.Text));
                     command.Parameters.Add(new SqlParameter("@Id_Team", lblTeamList.SelectedValue));
                     command.Parameters.Add(new SqlParameter("@Template", (Object)_template.Buffer));
                     command.Parameters.Add(new SqlParameter("@Model_Quality", _template.Quality.ToString()));
@@ -190,7 +191,7 @@ namespace Campeonato
             {
                 using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
                 {
-                    var query = "select First_Name, Last_Name, Birth_Date, Age, Dni, Team_Name, Template, Model_Quality from persona p, team t where p.Id_Team = t.Id_Team";
+                    var query = "select First_Name, Last_Name, Birth_Date, Age, Dni, Camiseta, Team_Name, Template, Model_Quality from persona p, team t where p.Id_Team = t.Id_Team";
                     byte[] dataTemplate; //nos permitirá almacenar temporalmente el template de la B.D.
                     FingerprintTemplate templateTemp;
                     int precision, quality;
@@ -199,14 +200,12 @@ namespace Campeonato
                     SqlDataReader reader = command.ExecuteReader();
                     int flag = 0;
 
-
                     //debemos preparar la libreria para la identificacion de huellas
 
                     fingerPrint.IdentifyPrepare(_template);
 
                     while (reader.Read())
                     {
-
                         dataTemplate = (byte[])reader["template"];// Extraemos el template desde la B.D.
                         quality = (int)reader["Model_Quality"]; //extraemos la calidad de ese template
 
@@ -227,6 +226,8 @@ namespace Campeonato
                             dateTimePicker1.Value = Convert.ToDateTime((reader["Birth_Date"].ToString()));
                             mtxtAge.ResetText();
                             mtxtAge.AppendText(reader["Age"].ToString());
+                            mtxtCamiseta.ResetText();
+                            mtxtCamiseta.AppendText(reader["Camiseta"].ToString());
                             mtxtDni.ResetText();
                             mtxtDni.AppendText(reader["Dni"].ToString());
                             lblTeamList.ResetText();
@@ -239,7 +240,6 @@ namespace Campeonato
                     {
                         MessageBox.Show("no encontrado");
                     }
-
                 }
             }
         }
@@ -256,7 +256,7 @@ namespace Campeonato
             return error;
         }
 
-        private bool Empty_Field(String First_Name, String Last_Name, FingerprintTemplate _template, String Age, String Dni, String Team_List)
+        private bool Empty_Field(String First_Name, String Last_Name, FingerprintTemplate _template, String Camiseta, String Dni, String Team_List)
         {
             bool error = false;
 
@@ -276,10 +276,10 @@ namespace Campeonato
                 MessageBox.Show("Ingrese Apellido");
                 return error = true;
             }
-            
-            if (String.IsNullOrWhiteSpace(Age))
+
+            if (String.IsNullOrWhiteSpace(Camiseta))
             {
-                MessageBox.Show("Ingrese Edad");
+                MessageBox.Show("Ingrese Camiseta");
                 return error = true;
             }
             if (String.IsNullOrWhiteSpace(Dni))
@@ -327,7 +327,7 @@ namespace Campeonato
             mtxtAge.ResetText();
             SendKeys.Send("{Right}");
             mtxtAge.AppendText(getPlayerAge());
-          
+
         }
 
         private void txtAge_TextChanged(object sender, EventArgs e)
@@ -337,8 +337,8 @@ namespace Campeonato
 
         private void mtxtAge_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
         {
-           
-            
+
+
         }
 
         private void btnClean_Click(object sender, EventArgs e)
@@ -348,12 +348,13 @@ namespace Campeonato
             dateTimePicker1.ResetText();
             mtxtAge.Clear();
             mtxtDni.Clear();
+            mtxtCamiseta.Clear();
             lblTeamList.ResetText(); ;
         }
 
         public void lblTeamList_SelectedIndexChanged(object sender, EventArgs e)
         {
-        
+
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -457,7 +458,7 @@ namespace Campeonato
         {
             Form2 frm2 = new Form2(this);
             frm2.Show();
-            
+
         }
 
         private void mtxtCamiseta_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
@@ -465,55 +466,52 @@ namespace Campeonato
 
         }
 
-      private String getPlayerAge()
-		{			          
-			string datePicked = dateTimePicker1.Value.ToString();
-			string dateNow = DateTime.Now.ToString();
-			int yearsOld, indexYear, indexMonth;
-			
-			indexYear = datePicked.LastIndexOf("/");
-			indexMonth = dateNow.IndexOf("/");
-			//Incremento para no tomar la barra como caracter inicial en substring
-			indexYear++;
-			indexMonth++;
+        private String getPlayerAge()
+        {
+            //Tomo el año, mes y dia del Picker y los de fecha actual. Los transformo a int para poder calcular
 
-			//Tomo el año, mes y dia del Picker y los de fecha actual. Los transformo a int para poder calcular
-			int birthYear = Convert.ToInt32(datePicked.Substring(indexYear, 4));
-			int birthMonth = Convert.ToInt32(datePicked.Substring(indexMonth, 2));
-			int birthDay = Convert.ToInt32(datePicked.Substring(0, 2));	
-			int currentYear = Convert.ToInt32(dateNow.Substring(indexYear, 4));
-			int currentMonth = Convert.ToInt32(dateNow.Substring(indexMonth, 2));
-			int currentDay = Convert.ToInt32(dateNow.Substring(0, 2));
-		
-			//Inicio calculo edad
-			yearsOld = currentYear - birthYear;
+            int birthDay = dateTimePicker1.Value.Day;
+            int birthMonth = dateTimePicker1.Value.Month;
+            int birthYear = dateTimePicker1.Value.Year;
+            int currentDay = DateTime.Today.Day;
+            int currentMonth = DateTime.Today.Month;
+            int currentYear = DateTime.Today.Year;
+            int yearsOld;
 
-			//Si el mes actual es mayor al de nacimiento, directamente queda la edad calculada previamente.
-			//Si el mes actual es menor al de nacimiento, hay que restar 1 a la edad calculada ya que aun no cumplio	
-			if (currentMonth < birthMonth){
-				yearsOld--;
-			}
-			//Si el mes coincide, se comparan los dias. Si el dia actual es menor al de cumpleaños, se resta 1 ya que aun no cumplio
-			else if (currentMonth == birthMonth){					
-			
-					if (currentDay < birthDay)
-					{
-						yearsOld--;
-					}
-				}			
+            //Inicio calculo edad
+            yearsOld = currentYear - birthYear;
 
-			//Control en caso de que quede numero negativo o edad mayor a 100
-			if(yearsOld < 0){
-				yearsOld = 0;
-			} else if (yearsOld > 99){
-				yearsOld = 99;				
-			}
+            //Si el mes actual es mayor al de nacimiento, directamente queda la edad calculada previamente.
+            //Si el mes actual es menor al de nacimiento, hay que restar 1 a la edad calculada ya que aun no cumplio	
+            if (currentMonth < birthMonth)
+            {
+                yearsOld--;
+            }
+            //Si el mes coincide, se comparan los dias. Si el dia actual es menor al de cumpleaños, se resta 1 ya que aun no cumplio
+            else if (currentMonth == birthMonth)
+            {
 
-			string yearsOldCalculated = yearsOld.ToString();
+                if (currentDay < birthDay)
+                {
+                    yearsOld--;
+                }
+            }
 
-			return yearsOldCalculated;
-		}
-	}
+            //Control en caso de que quede numero negativo o edad mayor a 100
+            if (yearsOld < 0)
+            {
+                yearsOld = 0;
+            }
+            else if (yearsOld > 99)
+            {
+                yearsOld = 99;
+            }
+
+            string yearsOldCalculated = yearsOld.ToString();
+
+            return yearsOldCalculated;
+        }
+    }
 }
 
 

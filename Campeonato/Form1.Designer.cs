@@ -143,7 +143,7 @@ namespace Campeonato
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.salirToolStripMenuItem.Text = "Salir";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -253,7 +253,7 @@ namespace Campeonato
             this.mtxtAge.Mask = "99";
             this.mtxtAge.Name = "mtxtAge";
             this.mtxtAge.Size = new System.Drawing.Size(24, 20);
-            this.mtxtAge.TabIndex = 3;
+            this.mtxtAge.TabIndex = 99;
             this.mtxtAge.ValidatingType = typeof(int);
             this.mtxtAge.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.mtxtAge_MaskInputRejected);
             // 
@@ -289,7 +289,7 @@ namespace Campeonato
             this.radioButtonEliminar.Location = new System.Drawing.Point(456, 233);
             this.radioButtonEliminar.Name = "radioButtonEliminar";
             this.radioButtonEliminar.Size = new System.Drawing.Size(61, 17);
-            this.radioButtonEliminar.TabIndex = 18;
+            this.radioButtonEliminar.TabIndex = 10;
             this.radioButtonEliminar.TabStop = true;
             this.radioButtonEliminar.Text = "Eliminar";
             this.radioButtonEliminar.UseVisualStyleBackColor = true;
@@ -300,7 +300,7 @@ namespace Campeonato
             this.btnConsult.Location = new System.Drawing.Point(12, 268);
             this.btnConsult.Name = "btnConsult";
             this.btnConsult.Size = new System.Drawing.Size(75, 23);
-            this.btnConsult.TabIndex = 19;
+            this.btnConsult.TabIndex = 8;
             this.btnConsult.Text = "Consultar";
             this.btnConsult.UseVisualStyleBackColor = true;
             this.btnConsult.Click += new System.EventHandler(this.btnConsult_Click);
@@ -311,7 +311,7 @@ namespace Campeonato
             this.radioButtonModificar.Location = new System.Drawing.Point(374, 234);
             this.radioButtonModificar.Name = "radioButtonModificar";
             this.radioButtonModificar.Size = new System.Drawing.Size(68, 17);
-            this.radioButtonModificar.TabIndex = 20;
+            this.radioButtonModificar.TabIndex = 9;
             this.radioButtonModificar.TabStop = true;
             this.radioButtonModificar.Text = "Modificar";
             this.radioButtonModificar.UseVisualStyleBackColor = true;
@@ -332,7 +332,7 @@ namespace Campeonato
             this.mtxtCamiseta.Mask = "99";
             this.mtxtCamiseta.Name = "mtxtCamiseta";
             this.mtxtCamiseta.Size = new System.Drawing.Size(21, 20);
-            this.mtxtCamiseta.TabIndex = 23;
+            this.mtxtCamiseta.TabIndex = 3;
             this.mtxtCamiseta.ValidatingType = typeof(int);
             this.mtxtCamiseta.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.mtxtCamiseta_MaskInputRejected);
             // 
