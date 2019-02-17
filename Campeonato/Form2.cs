@@ -52,9 +52,7 @@ namespace Campeonato
                     command.ExecuteNonQuery();
                 }
                 MessageBox.Show("Se registró equipo con éxito!!", "Programa con Joako", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtTeamName.Clear();
-                
-                
+                txtTeamName.Clear();     
             }
         }
 

@@ -15,6 +15,7 @@ namespace Campeonato
         private FingerprintCore fingerPrint;
         private FingerprintRawImage rawImage; //img original
         private FingerprintTemplate _template; //template donde se guarda la img
+        private int Id_Person;
 
 
         public Form1()
@@ -40,10 +41,6 @@ namespace Campeonato
             SetImage(ie.RawImage.Image);
 
             ExtractTemplate();
-
-            //rawImage = ie.RawImage;
-
-            //fingerPrint.Extract(rawImage, ref _template);
         }
 
         private delegate void delSetImage(Image img);
@@ -161,28 +158,75 @@ namespace Campeonato
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (Empty_Field(txtFirstName.Text, txtLastName.Text, _template, mtxtCamiseta.Text, mtxtDni.Text, lblTeamList.Text) == false)
             {
-                using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
+                if (Empty_Field(txtFirstName.Text, txtLastName.Text, _template, mtxtCamiseta.Text, mtxtDni.Text, lblTeamList.Text) == false)
                 {
+                    if (radioButtonModificar.Checked)
+                    {
+                        //ACA CUANDO PRESIONO MODIFICAR
+                        using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
+                        {
+                            var query = @"UPDATE persona SET First_Name = @First_Name, Last_Name = @Last_Name, Birth_Date = @Birth_Date, Age = @Age, Dni = @Dni, Camiseta = @Camiseta, Id_Team = @Id_Team, Model_Quality = @Model_Quality WHERE Id_Person = @Id_Person";
 
-                    var query = @"INSERT INTO persona (First_Name, Last_Name, Birth_Date, Age, Dni, Camiseta, Id_Team, Template, Model_Quality) VALUES (@First_Name, @Last_Name, @Birth_Date, @Age, @Dni, @Camiseta, @Id_Team, @Template, @Model_Quality)";
-                    SqlCommand command = new SqlCommand(query, conn);
-                    command.Parameters.Add(new SqlParameter("@First_Name", txtFirstName.Text));
-                    command.Parameters.Add(new SqlParameter("@Last_Name", txtLastName.Text));
-                    command.Parameters.Add(new SqlParameter("@Birth_Date", dateTimePicker1.Value.ToString("yyyy/MM/dd")));
-                    command.Parameters.Add(new SqlParameter("@Age", mtxtAge.Text));
-                    command.Parameters.Add(new SqlParameter("@Dni", mtxtDni.Text));
-                    command.Parameters.Add(new SqlParameter("@Camiseta", mtxtCamiseta.Text));
-                    command.Parameters.Add(new SqlParameter("@Id_Team", lblTeamList.SelectedValue));
-                    command.Parameters.Add(new SqlParameter("@Template", (Object)_template.Buffer));
-                    command.Parameters.Add(new SqlParameter("@Model_Quality", _template.Quality.ToString()));
-                    conn.Open();
-                    command.ExecuteNonQuery();
+                            SqlCommand command = new SqlCommand(query, conn);
+                            command.Parameters.Add(new SqlParameter("@First_Name", txtFirstName.Text));
+                            command.Parameters.Add(new SqlParameter("@Last_Name", txtLastName.Text));
+                            command.Parameters.Add(new SqlParameter("@Birth_Date", dateTimePicker1.Value.ToString("yyyy/MM/dd")));
+                            command.Parameters.Add(new SqlParameter("@Age", mtxtAge.Text));
+                            command.Parameters.Add(new SqlParameter("@Dni", mtxtDni.Text));
+                            command.Parameters.Add(new SqlParameter("@Camiseta", mtxtCamiseta.Text));
+                            command.Parameters.Add(new SqlParameter("@Id_Team", lblTeamList.SelectedValue));
+                            command.Parameters.Add(new SqlParameter("@Template", (Object)_template.Buffer));
+                            command.Parameters.Add(new SqlParameter("@Model_Quality", _template.Quality.ToString()));
+                            command.Parameters.Add(new SqlParameter("@Id_Person", Id_Person));
+                            DialogResult result =  MessageBox.Show("Desea confirmar la modificación?", "Confirmar", MessageBoxButtons.OKCancel);
+                            if (result == DialogResult.OK)
+                            {
+                                conn.Open();
+                                command.ExecuteNonQuery();
+                            }                           
+                        }
+                    }
+                    else
+                    {
+                        if (radioButtonEliminar.Checked)
+                        {
+                            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
+                            {
+                                var query = @"DELETE from persona WHERE Id_Person = @Id_Person";
+
+                                SqlCommand command = new SqlCommand(query, conn);
+                                command.Parameters.Add(new SqlParameter("@Id_Person", Id_Person));
+
+                                conn.Open();
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                        else
+                        {
+                            //POR DEFECTO SI NO HAY NINGUN RADIOBUTTON ACTIVO, GUARDA EL REGISTRO.
+                            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
+                            {
+
+                                var query = @"INSERT INTO persona (First_Name, Last_Name, Birth_Date, Age, Dni, Camiseta, Id_Team, Template, Model_Quality) VALUES (@First_Name, @Last_Name, @Birth_Date, @Age, @Dni, @Camiseta, @Id_Team, @Template, @Model_Quality)";
+                                SqlCommand command = new SqlCommand(query, conn);
+                                command.Parameters.Add(new SqlParameter("@First_Name", txtFirstName.Text));
+                                command.Parameters.Add(new SqlParameter("@Last_Name", txtLastName.Text));
+                                command.Parameters.Add(new SqlParameter("@Birth_Date", dateTimePicker1.Value.ToString("yyyy/MM/dd")));
+                                command.Parameters.Add(new SqlParameter("@Age", mtxtAge.Text));
+                                command.Parameters.Add(new SqlParameter("@Dni", mtxtDni.Text));
+                                command.Parameters.Add(new SqlParameter("@Camiseta", mtxtCamiseta.Text));
+                                command.Parameters.Add(new SqlParameter("@Id_Team", lblTeamList.SelectedValue));
+                                command.Parameters.Add(new SqlParameter("@Template", (Object)_template.Buffer));
+                                command.Parameters.Add(new SqlParameter("@Model_Quality", _template.Quality.ToString()));
+                                conn.Open();
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                    MessageBox.Show("Se registró con éxito!!", "Zona Argentino", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                MessageBox.Show("Se registró con éxito!!", "Zona Argentino", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
         }
 
         private void btnConsult_Click(object sender, EventArgs e)
@@ -191,12 +235,13 @@ namespace Campeonato
             {
                 using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conexion"].ToString()))
                 {
-                    var query = "select First_Name, Last_Name, Birth_Date, Age, Dni, Camiseta, Team_Name, Template, Model_Quality from persona p, team t where p.Id_Team = t.Id_Team";
+                    var query = "select Id_Person, First_Name, Last_Name, Birth_Date, Age, Dni, Camiseta, p.Id_Team, Team_Name, Template, Model_Quality from persona p, team t where p.Id_Team = t.Id_Team";
                     byte[] dataTemplate; //nos permitirá almacenar temporalmente el template de la B.D.
                     FingerprintTemplate templateTemp;
                     int precision, quality;
                     SqlCommand command = new SqlCommand(query, conn);
                     conn.Open();
+
                     SqlDataReader reader = command.ExecuteReader();
                     int flag = 0;
 
@@ -216,7 +261,6 @@ namespace Campeonato
                         templateTemp.Quality = quality;
                         if ((fingerPrint.Identify(templateTemp, out precision)) == 1) //si el template cumple con los requisitos de presición
                         {
-                            //MessageBox.Show(reader["First_Name"].ToString());
                             MessageBox.Show("jugador encontrado");
                             txtFirstName.ResetText();
                             txtFirstName.AppendText(reader["First_Name"].ToString());
@@ -232,6 +276,8 @@ namespace Campeonato
                             mtxtDni.AppendText(reader["Dni"].ToString());
                             lblTeamList.ResetText();
                             lblTeamList.SelectedText = reader["Team_Name"].ToString();
+                            lblTeamList.SelectedValue = reader["Id_Team"].ToString();
+                            Id_Person = (int)reader["Id_Person"];
                             flag = 1;
                             break;
                         }
@@ -349,12 +395,11 @@ namespace Campeonato
             mtxtAge.Clear();
             mtxtDni.Clear();
             mtxtCamiseta.Clear();
-            lblTeamList.ResetText(); ;
+            lblTeamList.ResetText();
         }
 
         public void lblTeamList_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -369,13 +414,21 @@ namespace Campeonato
 
         private void radioButtonEliminar_CheckedChanged(object sender, EventArgs e)
         {
-
+            isChecked = radioButtonEliminar.Checked;
         }
 
-        private void radioButtonModificar_CheckedChanged(object sender, EventArgs e)
+        private void radioButtonEliminar_Click(object sender, EventArgs e)
         {
-
+            if (radioButtonEliminar.Checked && !isChecked)
+                radioButtonEliminar.Checked = false;
+            else
+            {
+                radioButtonEliminar.Checked = true;
+                isChecked = false;
+            }
         }
+
+
 
         private void Empty_Field_Form(object sender, EventArgs e)
         {
@@ -449,9 +502,21 @@ namespace Campeonato
             }
         }
 
+        bool isChecked = false;
         private void radioButtonModificar_CheckedChanged_1(object sender, EventArgs e)
         {
+            isChecked = radioButtonModificar.Checked;
+        }
 
+        private void radioButtonModificar_Click(object sender, EventArgs e)
+        {
+            if (radioButtonModificar.Checked && !isChecked)
+                radioButtonModificar.Checked = false;
+            else
+            {
+                radioButtonModificar.Checked = true;
+                isChecked = false;
+            }
         }
 
         private void agregarEquipoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -511,7 +576,14 @@ namespace Campeonato
 
             return yearsOldCalculated;
         }
+
+        private void reporteEquipoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form3 frm3 = new Form3();
+            frm3.Show();
+        }
     }
 }
+
 
 

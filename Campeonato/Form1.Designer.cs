@@ -143,7 +143,7 @@ namespace Campeonato
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
             this.salirToolStripMenuItem.Text = "Salir";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -170,6 +170,7 @@ namespace Campeonato
             this.reporteEquipoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
             this.reporteEquipoToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.reporteEquipoToolStripMenuItem.Text = "Reporte Equipo";
+            this.reporteEquipoToolStripMenuItem.Click += new System.EventHandler(this.reporteEquipoToolStripMenuItem_Click);
             // 
             // ayudaToolStripMenuItem
             // 
@@ -225,12 +226,12 @@ namespace Campeonato
             // 
             // lblTeamList
             // 
+            this.lblTeamList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.lblTeamList.FormattingEnabled = true;
             this.lblTeamList.Location = new System.Drawing.Point(111, 217);
             this.lblTeamList.Name = "lblTeamList";
             this.lblTeamList.Size = new System.Drawing.Size(121, 21);
             this.lblTeamList.TabIndex = 5;
-            this.lblTeamList.Text = "Seleccione equipo";
             this.lblTeamList.SelectedIndexChanged += new System.EventHandler(this.lblTeamList_SelectedIndexChanged);
             // 
             // lblDni
@@ -289,11 +290,11 @@ namespace Campeonato
             this.radioButtonEliminar.Location = new System.Drawing.Point(456, 233);
             this.radioButtonEliminar.Name = "radioButtonEliminar";
             this.radioButtonEliminar.Size = new System.Drawing.Size(61, 17);
-            this.radioButtonEliminar.TabIndex = 10;
-            this.radioButtonEliminar.TabStop = true;
+            this.radioButtonEliminar.TabIndex = 99;
             this.radioButtonEliminar.Text = "Eliminar";
             this.radioButtonEliminar.UseVisualStyleBackColor = true;
             this.radioButtonEliminar.CheckedChanged += new System.EventHandler(this.radioButtonEliminar_CheckedChanged);
+            this.radioButtonEliminar.Click += new System.EventHandler(this.radioButtonEliminar_Click);
             // 
             // btnConsult
             // 
@@ -311,11 +312,11 @@ namespace Campeonato
             this.radioButtonModificar.Location = new System.Drawing.Point(374, 234);
             this.radioButtonModificar.Name = "radioButtonModificar";
             this.radioButtonModificar.Size = new System.Drawing.Size(68, 17);
-            this.radioButtonModificar.TabIndex = 9;
-            this.radioButtonModificar.TabStop = true;
+            this.radioButtonModificar.TabIndex = 99;
             this.radioButtonModificar.Text = "Modificar";
             this.radioButtonModificar.UseVisualStyleBackColor = true;
             this.radioButtonModificar.CheckedChanged += new System.EventHandler(this.radioButtonModificar_CheckedChanged_1);
+            this.radioButtonModificar.Click += new System.EventHandler(this.radioButtonModificar_Click);
             // 
             // CamisetaNro
             // 
