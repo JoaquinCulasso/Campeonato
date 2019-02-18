@@ -360,7 +360,7 @@ namespace Campeonato
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Zona Argentino";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -372,7 +372,7 @@ namespace Campeonato
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            this.Close();
         }
 
         #endregion
