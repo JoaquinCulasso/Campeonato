@@ -184,6 +184,7 @@ namespace Campeonato
                             {
                                 conn.Open();
                                 command.ExecuteNonQuery();
+                                MessageBox.Show("Se actualizaron los datos", "Zona Argentino", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }                           
                         }
                     }
@@ -198,8 +199,15 @@ namespace Campeonato
                                 SqlCommand command = new SqlCommand(query, conn);
                                 command.Parameters.Add(new SqlParameter("@Id_Person", Id_Person));
 
-                                conn.Open();
-                                command.ExecuteNonQuery();
+                                DialogResult result = MessageBox.Show("Desea eliminar el registro?", "Eliminar", MessageBoxButtons.OKCancel);
+                                if (result == DialogResult.OK)
+                                {
+                                    conn.Open();
+                                    command.ExecuteNonQuery();
+                                    MessageBox.Show("Se eliminó con éxito!", "Zona Argentino", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    btnClean.PerformClick();
+                                }
+                               
                             }
                         }
                         else
@@ -221,10 +229,11 @@ namespace Campeonato
                                 command.Parameters.Add(new SqlParameter("@Model_Quality", _template.Quality.ToString()));
                                 conn.Open();
                                 command.ExecuteNonQuery();
+                                MessageBox.Show("Se registró con éxito!", "Zona Argentino", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                btnClean.PerformClick();
                             }
                         }
-                    }
-                    MessageBox.Show("Se registró con éxito!!", "Zona Argentino", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }                   
                 }
             }
         }
@@ -261,7 +270,7 @@ namespace Campeonato
                         templateTemp.Quality = quality;
                         if ((fingerPrint.Identify(templateTemp, out precision)) == 1) //si el template cumple con los requisitos de presición
                         {
-                            MessageBox.Show("jugador encontrado");
+                            MessageBox.Show("Jugador encontrado");
                             txtFirstName.ResetText();
                             txtFirstName.AppendText(reader["First_Name"].ToString());
                             txtLastName.ResetText();
@@ -396,6 +405,10 @@ namespace Campeonato
             mtxtDni.Clear();
             mtxtCamiseta.Clear();
             lblTeamList.ResetText();
+            pictureBox1.Image = null;
+            prgbQuality.Value = 0;
+            Id_Person = 0;
+            _template = null;
         }
 
         public void lblTeamList_SelectedIndexChanged(object sender, EventArgs e)
@@ -425,58 +438,6 @@ namespace Campeonato
             {
                 radioButtonEliminar.Checked = true;
                 isChecked = false;
-            }
-        }
-
-
-
-        private void Empty_Field_Form(object sender, EventArgs e)
-        {
-            //Campo nombre
-            //recorremos el campo y verificamos que los caracteres escritos sean correctos
-            bool error = false;
-            bool error1 = false;
-
-            foreach (char caracter in txtFirstName.Text)
-            {
-                if (!char.IsLetter(caracter))
-                {
-                    error = true;
-                    break;
-                }
-            }
-
-            //Verificamos por la condicion de error
-            if (error)
-            {
-                errorProvider1.SetError(txtFirstName, "Solamente letras en el nombre");
-            }
-            else
-            {
-                errorProvider1.Clear();
-            }
-
-            //recorremos el campo y verificamos que los caracteres escritos sean correctos
-
-            foreach (char caracter in txtLastName.Text)
-            {
-                if (!char.IsLetter(caracter))
-                {
-                    error1 = true;
-                    break;
-                }
-            }
-
-
-
-            //Verificamos por la condicion de error
-            if (error1)
-            {
-                errorProvider1.SetError(txtLastName, "Solamente letras en el apellido");
-            }
-            else
-            {
-                errorProvider1.Clear();
             }
         }
 
@@ -581,6 +542,16 @@ namespace Campeonato
         {
             Form3 frm3 = new Form3();
             frm3.Show();
+        }
+
+        private void txtFirstName_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtLastName_TextChanged_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

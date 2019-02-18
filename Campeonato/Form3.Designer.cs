@@ -30,11 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.txtTeamName = new System.Windows.Forms.TextBox();
             this.lblTeamName = new System.Windows.Forms.Label();
             this.btnConsultTeam = new System.Windows.Forms.Button();
             this.campeonatoDataSet = new Campeonato.CampeonatoDataSet();
             this.campeonatoDataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.comboBoxTeam = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campeonatoDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campeonatoDataSetBindingSource)).BeginInit();
@@ -48,13 +48,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(776, 273);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // txtTeamName
-            // 
-            this.txtTeamName.Location = new System.Drawing.Point(104, 15);
-            this.txtTeamName.Name = "txtTeamName";
-            this.txtTeamName.Size = new System.Drawing.Size(108, 20);
-            this.txtTeamName.TabIndex = 1;
             // 
             // lblTeamName
             // 
@@ -85,17 +78,28 @@
             this.campeonatoDataSetBindingSource.DataSource = this.campeonatoDataSet;
             this.campeonatoDataSetBindingSource.Position = 0;
             // 
+            // comboBoxTeam
+            // 
+            this.comboBoxTeam.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTeam.FormattingEnabled = true;
+            this.comboBoxTeam.Location = new System.Drawing.Point(98, 14);
+            this.comboBoxTeam.Name = "comboBoxTeam";
+            this.comboBoxTeam.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTeam.TabIndex = 4;
+            this.comboBoxTeam.SelectedIndexChanged += new System.EventHandler(this.comboBoxTeam_SelectedIndexChanged);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 326);
+            this.Controls.Add(this.comboBoxTeam);
             this.Controls.Add(this.btnConsultTeam);
             this.Controls.Add(this.lblTeamName);
-            this.Controls.Add(this.txtTeamName);
             this.Controls.Add(this.dataGridView1);
             this.Name = "Form3";
             this.Text = "Form3";
+            this.Load += new System.EventHandler(this.Form3_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campeonatoDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campeonatoDataSetBindingSource)).EndInit();
@@ -107,10 +111,10 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.TextBox txtTeamName;
         private System.Windows.Forms.Label lblTeamName;
         private System.Windows.Forms.Button btnConsultTeam;
         private CampeonatoDataSet campeonatoDataSet;
         private System.Windows.Forms.BindingSource campeonatoDataSetBindingSource;
+        private System.Windows.Forms.ComboBox comboBoxTeam;
     }
 }

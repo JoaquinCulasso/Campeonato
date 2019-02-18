@@ -30,7 +30,6 @@ namespace Campeonato
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.txtFirstName = new System.Windows.Forms.TextBox();
             this.lblFirstName = new System.Windows.Forms.Label();
             this.txtLastName = new System.Windows.Forms.TextBox();
@@ -51,7 +50,6 @@ namespace Campeonato
             this.lblTeam = new System.Windows.Forms.Label();
             this.lblTeamList = new System.Windows.Forms.ComboBox();
             this.lblDni = new System.Windows.Forms.Label();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.mtxtAge = new System.Windows.Forms.MaskedTextBox();
             this.mtxtDni = new System.Windows.Forms.MaskedTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -62,7 +60,6 @@ namespace Campeonato
             this.CamisetaNro = new System.Windows.Forms.Label();
             this.mtxtCamiseta = new System.Windows.Forms.MaskedTextBox();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,7 +69,7 @@ namespace Campeonato
             this.txtFirstName.Name = "txtFirstName";
             this.txtFirstName.Size = new System.Drawing.Size(200, 20);
             this.txtFirstName.TabIndex = 0;
-            this.txtFirstName.TextChanged += new System.EventHandler(this.Empty_Field_Form);
+            this.txtFirstName.TextChanged += new System.EventHandler(this.txtFirstName_TextChanged_1);
             // 
             // lblFirstName
             // 
@@ -90,6 +87,7 @@ namespace Campeonato
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(200, 20);
             this.txtLastName.TabIndex = 1;
+            this.txtLastName.TextChanged += new System.EventHandler(this.txtLastName_TextChanged_1);
             // 
             // lblLastName
             // 
@@ -243,10 +241,6 @@ namespace Campeonato
             this.lblDni.TabIndex = 14;
             this.lblDni.Text = "DNI";
             // 
-            // errorProvider1
-            // 
-            this.errorProvider1.ContainerControl = this;
-            // 
             // mtxtAge
             // 
             this.mtxtAge.Enabled = false;
@@ -370,7 +364,6 @@ namespace Campeonato
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -403,7 +396,6 @@ namespace Campeonato
         private System.Windows.Forms.Label lblTeam;
         private System.Windows.Forms.ComboBox lblTeamList;
         private System.Windows.Forms.Label lblDni;
-        private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.MaskedTextBox mtxtDni;
         private System.Windows.Forms.MaskedTextBox mtxtAge;
         private System.Windows.Forms.PictureBox pictureBox1;
