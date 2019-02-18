@@ -404,7 +404,7 @@ namespace Campeonato
             mtxtAge.Clear();
             mtxtDni.Clear();
             mtxtCamiseta.Clear();
-            lblTeamList.ResetText();
+            lblTeamList.SelectedIndex = -1;
             pictureBox1.Image = null;
             prgbQuality.Value = 0;
             Id_Person = 0;

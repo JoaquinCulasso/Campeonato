@@ -47,13 +47,13 @@
             // 
             this.txtTeamName.Location = new System.Drawing.Point(77, 20);
             this.txtTeamName.Name = "txtTeamName";
-            this.txtTeamName.Size = new System.Drawing.Size(122, 20);
+            this.txtTeamName.Size = new System.Drawing.Size(135, 20);
             this.txtTeamName.TabIndex = 1;
             this.txtTeamName.TextChanged += new System.EventHandler(this.txtTeamName_TextChanged);
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(16, 73);
+            this.btnAdd.Location = new System.Drawing.Point(46, 73);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 2;
@@ -63,7 +63,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(124, 73);
+            this.btnCancel.Location = new System.Drawing.Point(151, 73);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -75,11 +75,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(210, 108);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(251, 108);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.txtTeamName);
             this.Controls.Add(this.lblTeamName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form2";
             this.Text = "Zona Argentino";
             this.Load += new System.EventHandler(this.Form2_Load);

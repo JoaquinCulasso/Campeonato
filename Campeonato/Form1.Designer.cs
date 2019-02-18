@@ -358,6 +358,7 @@ namespace Campeonato
             this.Controls.Add(this.lblFirstName);
             this.Controls.Add(this.txtFirstName);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Zona Argentino";
